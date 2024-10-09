@@ -101,6 +101,7 @@ onUnmounted(() => {
         scroll-snap-type: y mandatory;
         overflow-y: scroll;
         scroll-behavior: smooth;
+        max-height: 100vh;
 
         &__wrapper {
             position: relative;
@@ -109,7 +110,7 @@ onUnmounted(() => {
         video {
             width: 100%;
             height: 100vh;
-            object-fit: contain;
+            object-fit: cover;
             scroll-snap-align: start;
             background-color: black;
         }

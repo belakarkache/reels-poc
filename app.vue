@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import users from '@/constants/users.ts';
+import users from '@/constants/users';
 
 const isReelsOpen = ref<boolean>(false);
 const currentVideoId = ref<number>(0);
@@ -25,7 +25,7 @@ const openReels = (id: number) => {
         </div>
 
         <div class="post__video">
-          <video width="100%" muted @click="openReels(post.id)">
+          <video width="100%" muted :controls="false" :playsinline="true" @click="openReels(post.id)">
             <source :src="post.video" type="video/mp4" />
           </video>
         </div>
@@ -129,7 +129,7 @@ body {
       width: 100%;
       background-color: black;
       max-height: 80vh;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 }
