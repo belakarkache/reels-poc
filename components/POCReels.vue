@@ -24,15 +24,17 @@ onMounted(() => {
     observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.play();
+                (entry.target as HTMLVideoElement).play();
             } else {
-                entry.target.pause();
+                (entry.target as HTMLVideoElement).pause();
             }
         });
     });
 
     videoList.forEach((video) => {
-        observer.observe(video);
+        if (observer) {
+            observer.observe(video);
+        }
     });
 });
 
@@ -58,7 +60,7 @@ onUnmounted(() => {
 
         <div class="video-container">
             <div v-for="video in orderedVideoList" :key="video.id" class="video-container__wrapper">
-                <video :src="video.video" :muted="true" playsinline></video>
+                <video :src="video.video" :muted="true" playsinline preload="metadata"></video>
 
                 <div class="video__user">
                     <img :src="video.avatar" alt="avatar" />
@@ -117,7 +119,7 @@ onUnmounted(() => {
 
         .video__user {
             position: absolute;
-            bottom: 24px;
+            bottom: 42px;
             left: 16px;
             display: flex;
             gap: 8px;
