@@ -58,7 +58,7 @@ onUnmounted(() => {
 
         <div class="video-container">
             <div v-for="video in orderedVideoList" :key="video.id" class="video-container__wrapper">
-                <video :src="video.video" :muted="true" playsinline="false"></video>
+                <video :src="video.video" :muted="true" playsinline></video>
 
                 <div class="video__user">
                     <img :src="video.avatar" alt="avatar" />
