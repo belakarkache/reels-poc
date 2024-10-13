@@ -25,8 +25,7 @@ const openReels = (id: number) => {
         </div>
 
         <div class="post__video">
-          <video width="100%" muted :controls="false" :playsinline="true" preload="metadata"
-            @click="openReels(post.id)">
+          <video width="100%" muted :controls="false" :playsinline="true" preload="none" @click="openReels(post.id)">
             <source :src="post.video" type="video/mp4" />
           </video>
         </div>

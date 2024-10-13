@@ -10,6 +10,7 @@ const props = defineProps<{
 }>();
 
 const orderedVideoList = ref(props.videoList);
+const isLoading = ref(true)
 let observer: IntersectionObserver | null = null;
 
 onBeforeMount(() => {
@@ -44,6 +45,20 @@ onUnmounted(() => {
     }
 });
 
+function handleLoadedStart() {
+    isLoading.value = true;
+}
+
+function pauseVideo(event: MouseEvent | TouchEvent) {
+    const video = event.target as HTMLVideoElement;
+    video.pause();
+}
+
+function resumeVideo(event: MouseEvent | TouchEvent) {
+    const video = event.target as HTMLVideoElement;
+    video.play();
+}
+
 </script>
 
 <template>
@@ -60,7 +75,10 @@ onUnmounted(() => {
 
         <div class="video-container">
             <div v-for="video in orderedVideoList" :key="video.id" class="video-container__wrapper">
-                <video :src="video.video" :muted="true" playsinline preload="metadata"></video>
+                <video :src="video.video" :muted="true" playsinline preload="none" @loadstart="handleLoadedStart"
+                    @loadeddata="isLoading = false" @mousedown="pauseVideo" @mouseup="resumeVideo"
+                    @touchstart="pauseVideo" @touchend="resumeVideo"></video>
+                <div v-if="isLoading" class="loading">Carregando...</div>
 
                 <div class="video__user">
                     <img :src="video.avatar" alt="avatar" />
@@ -76,8 +94,8 @@ onUnmounted(() => {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
+    right: 0;
     background-color: black;
     z-index: 10;
 
@@ -99,22 +117,40 @@ onUnmounted(() => {
     .video-container {
         display: flex;
         flex-direction: column;
-        height: 100%;
         scroll-snap-type: y mandatory;
         overflow-y: scroll;
         scroll-behavior: smooth;
-        max-height: 100vh;
+        height: 100vh;
+        height: 100dvh;
+        min-height: -webkit-fill-available;
+
+        @media (min-width: 768px) {
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
         &__wrapper {
             position: relative;
         }
 
         video {
-            width: 100%;
             height: 100vh;
+            height: 100dvh;
+            width: 100%;
             object-fit: cover;
             scroll-snap-align: start;
             background-color: black;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 2000;
         }
 
         .video__user {
