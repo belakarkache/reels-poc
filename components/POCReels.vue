@@ -140,6 +140,8 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
         height: 100vh;
         height: 100dvh;
         min-height: -webkit-fill-available;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
         @media (min-width: 768px) {
             max-width: 600px;
@@ -184,9 +186,13 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
         .video {
             &__user {
                 position: absolute;
-                left: 16px;
+                left: 42px;
                 bottom: 56px;
                 z-index: 11;
+
+                @media(max-width: 768px) {
+                    left: 16px;
+                }
 
                 .user-name {
                     color: white;
