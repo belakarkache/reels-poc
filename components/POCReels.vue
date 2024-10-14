@@ -6,11 +6,13 @@ const props = defineProps<{
         name: string;
         avatar: string;
         video: string;
+        subtitle: string;
     }>;
 }>();
 
 const orderedVideoList = ref(props.videoList);
 const isLoading = ref(true)
+const currentlyPlaying = ref<number>(0)
 let observer: IntersectionObserver | null = null;
 
 onBeforeMount(() => {
@@ -21,11 +23,17 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    const videoList = document.querySelectorAll('video');
+    const videoList = document.querySelectorAll('#reel');
+
     observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 (entry.target as HTMLVideoElement).play();
+                currentlyPlaying.value = Array.from(videoList).findIndex((video) => video === entry.target);
+
+                if (currentlyPlaying.value < videoList.length - 1) {
+                    (videoList[currentlyPlaying.value + 1] as HTMLVideoElement).preload = 'auto';
+                }
             } else {
                 (entry.target as HTMLVideoElement).pause();
             }
@@ -75,14 +83,22 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
 
         <div class="video-container">
             <div v-for="video in orderedVideoList" :key="video.id" class="video-container__wrapper">
-                <video :src="video.video" :muted="true" playsinline preload="none" @loadstart="handleLoadedStart"
-                    @loadeddata="isLoading = false" @mousedown="pauseVideo" @mouseup="resumeVideo"
-                    @touchstart="pauseVideo" @touchend="resumeVideo"></video>
+                <video id="reel" :src="video.video" :muted="true" playsinline preload="none"
+                    @loadstart="handleLoadedStart" @loadeddata="isLoading = false" @mousedown="pauseVideo"
+                    @mouseup="resumeVideo" @touchstart="pauseVideo" @touchend="resumeVideo"></video>
                 <div v-if="isLoading" class="loading">Carregando...</div>
 
                 <div class="video__user">
+                    <p class="user-name">{{ video.name }}</p>
+                </div>
+
+                <div class="video__actions">
                     <img :src="video.avatar" alt="avatar" />
-                    <span>{{ video.name }}</span>
+                    <div class="like">
+                        <IconHeart />
+                        <span>1,2 mil</span>
+                    </div>
+                    <IconShare />
                 </div>
             </div>
         </div>
@@ -111,6 +127,7 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
         svg {
             width: 24px;
             height: 24px;
+            cursor: pointer;
         }
     }
 
@@ -131,6 +148,17 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
 
         &__wrapper {
             position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+                z-index: 10;
+                height: 68px;
+            }
         }
 
         video {
@@ -153,26 +181,68 @@ function resumeVideo(event: MouseEvent | TouchEvent) {
             z-index: 2000;
         }
 
-        .video__user {
-            position: absolute;
-            bottom: 42px;
-            left: 16px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
+        .video {
+            &__user {
+                position: absolute;
+                left: 16px;
+                bottom: 56px;
+                z-index: 11;
 
-            img {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
+                .user-name {
+                    color: white;
+                    font-size: 16px;
+                    font-weight: 700;
+                    margin: 0;
+                }
             }
 
-            span {
-                color: white;
-                font-size: 16px;
-                font-weight: 700;
+            &__actions {
+                position: absolute;
+                right: 42px;
+                bottom: 56px;
+                z-index: 11;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 26px;
+
+                @media(max-width: 768px) {
+                    right: 16px;
+                }
+
+                img {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                    border: 1px solid white;
+                }
+
+                .like {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1px;
+                    justify-content: center;
+                    align-items: center;
+
+                    span {
+                        color: white;
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+                }
+
+                svg {
+                    width: 28px;
+                    height: 28px;
+
+                    path {
+                        fill: white;
+                    }
+                }
             }
         }
+
     }
 }
 </style>

@@ -1,21 +1,27 @@
+import video1 from '@/assets/videos/4058073-uhd_2160_4096_25fps.mp4';
+import video2 from '@/assets/videos/4695807-uhd_2160_4096_25fps.mp4';
+import video3 from '@/assets/videos/7169950-uhd_2160_4096_25fps.mp4';
+
+const videos = [video1, video2, video3];
+
 const users = [
     {
       id: 0,
       name: 'Ana Silva',
       avatar: 'https://picsum.photos/id/9/400',
-      video: 'https://cdn.pixabay.com/video/2022/07/24/125314-733046618_large.mp4',
+      video: videos[0],
     },
     {
       id: 1,
       name: 'Bruno Santos',
       avatar: 'https://picsum.photos/id/45/400',
-      video: 'https://cdn.pixabay.com/video/2022/09/19/131824-751934493_large.mp4',
+      video: videos[1],
     },
     {
       id: 2,
       name: 'Carla Oliveira',
       avatar: 'https://picsum.photos/id/18/400',
-      video: 'https://cdn.pixabay.com/video/2024/08/20/227590_large.mp4',
+      video: videos[2],
     },
     {
       id: 3,
